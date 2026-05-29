@@ -1,8 +1,6 @@
 package models
 
-import "gorm.io/datatypes"
-
-type Service struct {
+type User struct {
 	Base
 
 	Email string           `gorm:"not null;unique" json:"email"`
