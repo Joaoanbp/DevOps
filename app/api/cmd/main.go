@@ -3,11 +3,8 @@ package main
 import (
 	"api/internal/api"
 	"log"
-	"net/http"
 	"os"
 
-	"github.com/gin-gonic/gin"
-	"gorm.io/gorm"
 )
 
 func main() {
