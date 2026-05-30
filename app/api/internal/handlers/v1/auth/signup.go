@@ -1,19 +1,28 @@
 package v1_auth
-
+//cadastro né
 import (
 	"api/internal/models"
 	"net/http"
 	"github.com/gin-gonic/gin"
+	//"golang.org/x/crypto/bcrypt"
 )
 
-func (this *AuthController) Post("/signup", ctx *gin.Context) {
+func (this *AuthController) Post(ctx *gin.Context) {
 	email := ctx.Query("email")
 	password := ctx.Query("password")
 	
-	user := this.Database.Create(&models.User{
+	result := this.Database.Create(&models.User{
 		Email: email,
 		Password: password,
 	})
+
+	if result.Error != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{
+			"error": result.Error.Error(),
+		})
+		return
+	}
+	
 	ctx.JSON(http.StatusOK, gin.H{
 		"mogged": true,
 	})

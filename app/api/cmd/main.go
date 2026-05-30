@@ -15,7 +15,7 @@ func main() {
 		port = "6060"
 	}
 
-	log.Printf("Running in http://localhost:%s", port)
+	log.Printf("Running in http://localhost:%d", port)
 	if err := api.Router.Run(":" + port); err != nil {
 		log.Fatalf("Failed to run server: %v", err)
 	}

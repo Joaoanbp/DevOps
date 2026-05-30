@@ -8,8 +8,16 @@ type AuthController struct {
 	*framework.BaseController
 }
 
-func New(options *framework.BaseController) *AuthController {
+func NewLogin(options *framework.BaseController) *AuthController {
 	return &AuthController{
 		BaseController: options,
+		Path: "/login",
+	}
+}
+
+func NewSignup(options *framework.BaseController) *AuthController {
+	return &AuthController{
+		BaseController: options,
+		Path: "/signup",
 	}
 }
