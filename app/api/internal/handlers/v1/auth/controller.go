@@ -11,13 +11,11 @@ type AuthController struct {
 func NewLogin(options *framework.BaseController) *AuthController {
 	return &AuthController{
 		BaseController: options,
-		Path: "/login",
 	}
 }
 
 func NewSignup(options *framework.BaseController) *AuthController {
 	return &AuthController{
 		BaseController: options,
-		Path: "/signup",
 	}
 }

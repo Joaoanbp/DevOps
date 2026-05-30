@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"golang.org/x/time/rate"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type IPRateLimiter struct {
