@@ -1,21 +1,21 @@
 package api
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"time"
-	"fmt"
 
 	"api/internal/database"
 	"api/internal/framework"
 
 	"api/internal/handlers/v1"
+	v1_auth "api/internal/handlers/v1/auth"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
-	// "golang.org/x/time/rate"
 )
 
 var (
@@ -35,20 +35,17 @@ func Initialize() {
 
 	Router = gin.Default()
 	config := cors.DefaultConfig()
-	config.AllowOrigins = []string{fmt.Sprintf("http://localhost:%s", 6060)}
+	config.AllowOrigins = []string{fmt.Sprintf("http://localhost:%d", 6060)}
 	config.AllowMethods = []string{"GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"}
 	config.AllowHeaders = []string{"Origin", "Content-Length", "Content-Type", "Authorization"}
 	Router.Use(cors.New(config))
 	Router.HandleMethodNotAllowed = true
-	Router.GET("/", func(ctx *gin.Context) {
-		ctx.JSON(http.StatusOK, gin.H{"uptime": time.Since(start)})
-	})
 	Router.NoRoute(func(ctx *gin.Context) {
 		ctx.AbortWithStatus(http.StatusNoContent)
 	})
 
 	/*
-	pg, err := database.New(database.ConnectionConfig{
+	db, err := database.New(database.ConnectionConfig{
 		DriverType: database.Postgres,
 		PostgresHost:     os.Getenv("DB_HOST"),
 		PostgresPort:     os.Getenv("DB_PORT"),
@@ -59,7 +56,7 @@ func Initialize() {
 	})
 	*/
 
-	pg, err := database.New(database.ConnectionConfig{
+	db, err := database.New(database.ConnectionConfig{
 		DriverType: database.SQLite,
 		SQLitePath: "fuck.sql",
 	})
@@ -68,9 +65,10 @@ func Initialize() {
 		log.Panic(err)
 	}
 
-	base := &framework.BaseController{Postgres: pg, Router: Router.Group("")}
+	base := &framework.BaseController{Database: db.Driver, Router: Router.Group("")}
 	v1 := base.Group("/v1")
 
 	// v1.Use(framework.RateLimit(rate.Every(time.Second), 5)).Register("/submit", submit.New(v1))
 	v1.Register("/", handler_v1.New(v1))
+	v1.Register("/", v1_auth.New(v1))
 }

@@ -2,6 +2,9 @@ package handler_v1
 
 import (
 	"api/internal/framework"
+	"net/http"
+
+	"github.com/gin-gonic/gin"
 )
 
 type IndexController struct {
@@ -14,6 +17,8 @@ func New(options *framework.BaseController) *IndexController {
 	}
 }
 
-func (this *IndexController) Get() {
-	// this.Ctx.WriteString("Hello, World!")
+func (this *IndexController) Get(ctx *gin.Context) {
+	ctx.JSON(http.StatusOK, gin.H{
+		"mogged": true,
+	})
 }

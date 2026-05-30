@@ -7,20 +7,22 @@ import (
 
 type BaseController struct {
 	Router   *gin.RouterGroup
-	Postgres *gorm.DB
+	Database *gorm.DB
 }
+
+type HandlerFunc func(*gin.Context)
 
 func (this *BaseController) Use(handlers ...gin.HandlerFunc) *BaseController {
 	return &BaseController{
 		Router:   this.Router.Group("", handlers...),
-		Postgres: this.Postgres,
+		Database: this.Database,
 	}
 }
 
 func (this *BaseController) Group(path string) *BaseController {
 	return &BaseController{
 		Router:   this.Router.Group(path),
-		Postgres: this.Postgres,
+		Database: this.Database,
 	}
 }
 

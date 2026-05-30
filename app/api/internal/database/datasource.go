@@ -4,8 +4,6 @@ import (
 	"api/internal/models"
 	"fmt"
 	"log"
-	"sort"
-	"time"
 
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
@@ -33,9 +31,12 @@ type Datasource struct {
 	Driver *gorm.DB
 }
 
-func New(config ConnectionConfig, gormConfig gorm.Config) (*Datasource, error) {
+func New(config ConnectionConfig) (*Datasource, error) {
 	var database *gorm.DB
 	var connectionError error
+
+	// initialize an empty gorm config
+	gormConfig := gorm.Config{}
 
 	switch config.DriverType {
 	case "sqlite":
